@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Valentine 💘</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        background: linear-gradient(135deg, #ff758c, #ff7eb3);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Quicksand', sans-serif;
+        text-align: center;
+        overflow: hidden;
+        color: white;
+    }
+
+    h1 {
+        font-size: 40px;
+        margin-bottom: 40px;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 50px;
+    }
+
+    button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    #yesBtn {
+        font-size: 40px;
+    }
+
+    #noBtn {
+        font-size: 40px;
+    }
+
+    #result {
+        display: none;
+        font-size: 50px;
+        margin-top: 30px;
+        animation: pop 0.5s ease;
+    }
+
+    @keyframes pop {
+        0% { transform: scale(0); }
+        100% { transform: scale(1); }
+    }
+
+    .heart {
+        position: absolute;
+        font-size: 20px;
+        animation: floatUp 4s linear forwards;
+    }
+
+    @keyframes floatUp {
+        0% { transform: translateY(0); opacity: 1; }
+        100% { transform: translateY(-100vh); opacity: 0; }
+    }
+
+    .firework {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        animation: explode 1s ease-out forwards;
+    }
+
+    @keyframes explode {
+        0% { transform: scale(1); opacity: 1; }
+        100% { transform: scale(8); opacity: 0; }
+    }
+</style>
+</head>
+
+<body>
+
+<h1 id="question">Will you be my Valentine? 💖</h1>
+
+<div class="buttons">
+    <button id="yesBtn">❤️</button>
+    <button id="noBtn">💔</button>
+</div>
+
+<div id="result">YEAHHHHH 💖</div>
+
+<script>
+let yesBtn = document.getElementById("yesBtn");
+let noBtn = document.getElementById("noBtn");
+let result = document.getElementById("result");
+let question = document.getElementById("question");
+
+let noTexts = [
+    "Are you sure? 😢",
+    "100% no? 🥺",
+    "Think again 💔",
+    "Last chance 😭",
+    "Really really no?"
+];
+
+let noClickCount = 0;
+let yesSize = 40;
+let noSize = 40;
+
+setInterval(() => {
+    let heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "💖";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (20 + Math.random() * 30) + "px";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 4000);
+}, 500);
+
+function createFirework(x, y) {
+    for(let i = 0; i < 15; i++) {
+        let fw = document.createElement("div");
+        fw.className = "firework";
+        fw.style.background = `hsl(${Math.random()*360},100%,60%)`;
+        fw.style.left = x + "px";
+        fw.style.top = y + "px";
+        document.body.appendChild(fw);
+        setTimeout(() => fw.remove(), 1000);
+    }
+}
+
+yesBtn.onclick = function() {
+    question.style.display = "none";
+    document.querySelector(".buttons").style.display = "none";
+    result.style.display = "block";
+    document.body.style.background = "#ff4d6d";
+    createFirework(window.innerWidth/2, window.innerHeight/2);
+}
+
+noBtn.onclick = function() {
+    noClickCount++;
+    if(noClickCount <= noTexts.length){
+        noBtn.innerText = noTexts[noClickCount - 1];
+    }
+    yesSize += 10;
+    yesBtn.style.fontSize = yesSize + "px";
+    noSize -= 5;
+    if(noSize > 5){
+        noBtn.style.fontSize = noSize + "px";
+    }
+}
+</script>
+
+</body>
+</html>
