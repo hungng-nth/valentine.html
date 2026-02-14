@@ -29,7 +29,6 @@
     .buttons {
         display: flex;
         gap: 50px;
-        position: relative;
     }
 
     button {
@@ -45,7 +44,6 @@
 
     #noBtn {
         font-size: 40px;
-        position: relative;
     }
 
     #result {
@@ -60,17 +58,28 @@
         100% { transform: scale(1); }
     }
 
-    .explosion {
+    .heart {
         position: absolute;
-        width: 10px;
-        height: 10px;
+        font-size: 20px;
+        animation: floatUp 4s linear forwards;
+    }
+
+    @keyframes floatUp {
+        0% { transform: translateY(0); opacity: 1; }
+        100% { transform: translateY(-100vh); opacity: 0; }
+    }
+
+    .firework {
+        position: absolute;
+        width: 6px;
+        height: 6px;
         border-radius: 50%;
-        animation: explode 0.8s ease-out forwards;
+        animation: explode 1s ease-out forwards;
     }
 
     @keyframes explode {
         0% { transform: scale(1); opacity: 1; }
-        100% { transform: scale(12); opacity: 0; }
+        100% { transform: scale(8); opacity: 0; }
     }
 </style>
 </head>
@@ -104,36 +113,46 @@ let noClickCount = 0;
 let yesSize = 40;
 let noSize = 40;
 
-function explodeButton() {
-    let rect = noBtn.getBoundingClientRect();
-    for(let i = 0; i < 20; i++) {
-        let particle = document.createElement("div");
-        particle.className = "explosion";
-        particle.style.background = `hsl(${Math.random()*360},100%,60%)`;
-        particle.style.left = rect.left + rect.width/2 + "px";
-        particle.style.top = rect.top + rect.height/2 + "px";
-        document.body.appendChild(particle);
-        setTimeout(() => particle.remove(), 800);
-    }
+// Tim bay liên tục
+setInterval(() => {
+    let heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "💖";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (20 + Math.random() * 30) + "px";
+    document.body.appendChild(heart);
 
-    noBtn.style.display = "none";
+    setTimeout(() => heart.remove(), 4000);
+}, 500);
+
+// Pháo hoa
+function createFirework(x, y) {
+    for(let i = 0; i < 15; i++) {
+        let fw = document.createElement("div");
+        fw.className = "firework";
+        fw.style.background = `hsl(${Math.random()*360},100%,60%)`;
+        fw.style.left = x + "px";
+        fw.style.top = y + "px";
+        document.body.appendChild(fw);
+
+        setTimeout(() => fw.remove(), 1000);
+    }
 }
 
-yesBtn.onclick = function() {
+yesBtn.onclick = function(e) {
     question.style.display = "none";
     document.querySelector(".buttons").style.display = "none";
     result.style.display = "block";
     document.body.style.background = "#ff4d6d";
+
+    createFirework(window.innerWidth/2, window.innerHeight/2);
 }
 
 noBtn.onclick = function() {
     noClickCount++;
 
-    if(noClickCount < noTexts.length){
+    if(noClickCount <= noTexts.length){
         noBtn.innerText = noTexts[noClickCount - 1];
-    } 
-    else {
-        explodeButton();
     }
 
     yesSize += 10;
